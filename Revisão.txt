@@ -1,0 +1,252 @@
+
+
+
+
+------------------------------------------------------------------------------------------------------
+Comprensão de Arquivo.
+
+mkdir ~/linux_essentials-3.1
+$ cd ~/linux_essentials-3.1
+$ mkdir compression archiving
+$ cd compression
+$ cat /etc/* > bigfile 2> /dev/null
+
+$ cp bigfile bigfile2
+$ cp bigfile bigfile3
+$ cp bigfile bigfile4
+$ ls -lh
+
+
+$ bzip2 bigfile2
+$ gzip bigfile3
+$ xz bigfile4
+
+Use bunzip2, gunzip ou unxz para descomprimir os arquivos:
+
+Linux Essentials (Versão 1.6) | Tópico 3: O Poder da Linha de Comando
+176 | learning.lpi.org | Licenciado sob CC BY-NC-ND 4.0. | Version: 2023-11-16
+$ bunzip2 bigfile2.bz2
+$ gunzip bigfile3.gz
+$ unxz bigfile4.xz
+$ ls -lh
+
+Para abrir um arquivo sem descompactar usa.
+
+zcat hosts.gz - para arquivo bzip
+bzcat - para arquivo bzip2
+xzcat - para arquivos xz
+
+------------------------------------------------------------------------------------------------------
+
+
+------------------------------------------------------------------------------------------------------
+
+Empacotamento.
+
+
+$ cd ~/linux_essentials-3.1
+$ tar cf archiving/3.1.tar compression
+A opção c instrui o tar a criar um novo arquivo e a opção f é o nome do arquivo a ser criado. O
+argumento imediatamente após as opções sempre será o nome do arquivo no qual trabalhar. O
+restante dos argumentos são os caminhos para quaisquer arquivos ou diretórios que você deseje
+adicionar, listar ou extrair do arquivo. No exemplo, adicionamos o diretório compression e todo
+o seu conteúdo ao pacote.
+Para visualizar o conteúdo de um tar ball, use a opção t do tar:
+$ tar -tf 3.1.tar
+compression/
+compression/bigfile-xz1.xz
+compression/bigfile-gz9.gz
+compression/hosts.gz
+compression/bigfile2
+compression/bigfile
+compression/bigfile-gz1.gz
+compression/bigfile-xz9.xz
+compression/bigfile3
+
+$ cd ~/linux_essentials-3.1/archiving
+$ ls
+3.1.tar
+$ tar xf 3.1.tar
+$ ls
+3.1.tar compression
+
+$ cd ~/linux_essentials-3.1/archiving
+$ rm -rf compression
+$ ls
+3.1.tar
+$ tar xvf 3.1.tar compression/hosts.gz - v mostra o nome do arquivo
+compression/
+compression/bigfile-xz1.xz
+compression/bigfile-gz9.gz
+compression/hosts.gz
+compression/bigfile2
+compression/bigfile
+compression/bigfile-gz1.gz
+compression/bigfile-xz9.xz
+compression/bigfile3
+compression/bigfile4
+$ ls
+3.1.tar compression
+$ ls compression
+hosts.gz
+Linux Essentials (Versão 1.6) | 3.1 Empacotando arquivos na linha de comando
+Version
+
+
+tar -czf gzip.tar.gz bigfile bigfile2 bigfile3      -z arquivos bzip
+
+$ tar -cjf bzip2.tar.bz2 bigfile bigfile2 bigfile3 -j arquivos bzip2
+
+$ tar -cJf xz.tar.xz bigfile bigfile2 bigfile3 - J arquivos bzip3
+
+
+$ tar cf plain.tar bigfile bigfile2 bigfile3
+$ tar tf plain.tar
+bigfile
+bigfile2
+bigfile3
+$ tar uf plain.tar bigfile4
+$ tar tf plain.tar
+bigfile
+bigfile2
+bigfile3
+bigfile4
+$ tar uzf gzip.tar.gz bigfile4
+tar: Cannot update compressed archives
+Try 'tar --help' or 'tar --usage' for more information.
+
+------------------------------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------------------------------
+Trabalhando com zip
+
+$ touch dir/file1 dir/file2
+Em seguida, usamos zip para comprimir esses arquivos em um arquivo ZIP:
+$ zip -r zipfile.zip dir
+adding: dir/ (stored 0%)
+adding: dir/file1 (stored 0%)
+adding: dir/file2 (stored 0%)
+$ rm -rf dir
+Por fim, descompactamos o arquivo ZIP novamente:
+$ ls
+zipfile.zip
+$ unzip zipfile.zip
+
+
+Ao adicionar diretórios aos arquivos ZIP, a opção -r faz com que o zip inclua o conteúdo desses
+diretórios. Sem ele, teríamos um diretório vazio no arquivo ZIP.
+
+------------------------------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------------------------------------
+
+1. Liste o conteúdo do diretório atual, incluindo o proprietário e as permissões, e redirecione a
+saída para um arquivo chamado contents.txt dentro de seu diretório inicial.
+
+$ ls -l > contents.txt
+
+2. Ordene o conteúdo do arquivo contents.txt a partir do diretório atual e inclua esse conteúdo
+ordenado no final de um novo arquivo chamado contents-sorted.txt
+
+$ sort contents.txt >> contents-sorted.txt
+
+3. Exiba as últimas 10 linhas do arquivo /etc/passwd e redirecione-as para um novo arquivo no
+diretório Documents do seu usuário.
+
+$ tail /etc/passwd > Documents/newfile
+
+4. Conte o número de palavras no arquivo contents.txt e inclua a saída no final de um arquivo
+chamado field2.txt em seu diretório inicial. Você precisará usar redirecionamentos de
+entrada e de saída.
+
+$ wc < contents.txt >> field2.txt
+
+5. Exiba as 5 primeiras linhas do arquivo /etc/passwd e classifique a saída em ordem alfabética
+reversa.
+
+$ head -n 5 /etc/passwd | sort -r
+
+6. Usando o arquivo contents.txt criado anteriormente, conte o número de caracteres das
+últimas 9 linhas.
+
+$ tail -n 9 contents.txt | wc -c
+531
+
+7. Conte o número de arquivos chamados test no diretório /usr/share e em seus subdiretórios.
+Nota: cada linha da saída do comando find representa um arquivo.
+
+
+Conte o número de arquivos chamados test no diretório /usr/share e em seus subdiretórios.
+Nota: cada linha da saída do comando find representa um arquivo.
+
+Linux Essentials (Versão 1.6) | Tópico 3: O Poder da Linha de Comando
+
+202 | learning.lpi.org | Licenciado sob CC BY-NC-ND 4.0. | Version: 2023-11-16
+
+$ find /usr/share -name test | wc -l
+
+--------------------------------------------------------------------------------------------------------------
+
+
+--------------------------------------------------------------------------------------------------------------
+
+Todas as linhas que não contêm nenhum dos seguintes caracteres: sawgtfixk.
+$ grep -v "[sawgtfixk]" /usr/share/hunspell/en_US.dic
+
+
+Todas as linhas que começam com 3 letras quaisquer e a palavra dig.
+$ grep "^...dig" /usr/share/hunspell/en_US.dic
+
+
+$ grep -E "e+$" /usr/share/hunspell/en_US.dic
+Anglicize
+Anglophobe
+Anthropocene
+
+
+Todas as linhas que contêm uma das seguintes palavras: org , kay ou tuna.
+
+$ grep -E "org|kay|tuna" /usr/share/hunspell/en_US.dic
+Borg/SM
+George/MS
+Tokay/M
+fortunate/UY
+...
+
+
+Número de linhas que começam com um ou nenhum c seguido pela string ati.
+$ grep -cE "^c?ati" /usr/share/hunspell/en_US.dic
+
+--------------------------------------------------------------------------------------------------------------
+
+
+
+--------------------------------------------------------------------------------------------------------------
+   Variaveis
+
+#!/bin/bash
+# Este é nosso primeiro comentário. Também é recomendável documentar todos os scripts.
+username=Carol
+echo "Hello $username!"
+
+
+#!/bin/bash
+# Este é nosso primeiro comentário. Também é recomendável documentar todos os scripts.
+username=$1
+Linux Essentials (Versão 1.6) | 3.3 Transformando comandos em Scripts
+Version: 2023-11-16 | Licenciado sob CC BY-NC-ND 4.0. | learning.lpi.org | 225
+echo "Hello $username!"
+
+
+then
+username=$1
+echo "Hello $username!"
+else
+echo "Please enter only one argument."
+fi
+echo "Number of arguments: $#."
+
+
+--------------------------------------------------------------------------------------------------------------
